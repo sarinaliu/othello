@@ -2,6 +2,7 @@
 #define __PLAYER_H__
 
 #include <iostream>
+#include <algorithm>
 #include "common.hpp"
 #include "board.hpp"
 using namespace std;
@@ -9,6 +10,21 @@ using namespace std;
 class Player {
 
 public:
+	Board *b;
+	Side side;
+	Side opponentside;
+
+	/*int scoring_sys[8][8] = {
+							{3, -2, 2, 2, 2, 2, -2, 3},
+                            {-2, -3, 1, 1, 1, 1, -3, -2},
+                            {2, 1, 1, 1, 1, 1, 1, 2},
+                            {2, 1, 1, 1, 1, 1, 1, 2},
+                            {2, 1, 1, 1, 1, 1, 1, 2},
+                            {2, 1, 1, 1, 1, 1, 1, 2},
+                            {-2, -3, 1, 1, 1, 1, -3, -2},
+                            {3, -2, 2, 2, 2, 2, -2, 3}
+                        	};*/
+
     Player(Side side);
     ~Player();
 
