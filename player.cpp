@@ -1,4 +1,5 @@
 #include "player.hpp"
+#include <vector>
 
 /*
  * Constructor for the player; initialize everything here. The side your AI is
@@ -14,6 +15,21 @@ Player::Player(Side side) {
      * precalculating things, etc.) However, remember that you will only have
      * 30 seconds.
      */
+
+    b = new Board();
+    this->b = b;
+
+    this->side = side;
+
+    if (side == BLACK)
+    {
+        opponentside = WHITE;
+    }
+    else
+    {
+        opponentside = BLACK;
+    }
+
 }
 
 /*
@@ -40,6 +56,82 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      * TODO: Implement how moves your AI should play here. You should first
      * process the opponent's opponents move before calculating your own move
      */
-    cout << "Othello Game" << endl;
+
+    int scoring_sys[8][8] = {
+                            {3, -2, 2, 2, 2, 2, -2, 3},
+                            {-2, -3, 1, 1, 1, 1, -3, -2},
+                            {2, 1, 1, 1, 1, 1, 1, 2},
+                            {2, 1, 1, 1, 1, 1, 1, 2},
+                            {2, 1, 1, 1, 1, 1, 1, 2},
+                            {2, 1, 1, 1, 1, 1, 1, 2},
+                            {-2, -3, 1, 1, 1, 1, -3, -2},
+                            {3, -2, 2, 2, 2, 2, -2, 3}
+                            };
+
+    if (b->isDone())
+    {
+        return nullptr;
+    }
+
+    if (opponentsMove != nullptr)
+    {
+        b->doMove(opponentsMove, opponentside);
+    }
+
+    // RANDOM METHOD
+    /*Move *yourMove = new Move(0, 0);
+    if (b->hasMoves(side))
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                *yourMove = Move(i, j);
+                if (b->checkMove(yourMove, side))
+                {
+                    b->doMove(yourMove, side);
+                    cerr << yourMove->getX() << " , " << yourMove->getY() << endl;
+                    return yourMove;
+                }
+            }
+        }
+    }*/
+    
+
+
+    vector<Move*> v_moves;
+    vector<int> v_scores;
+    Move *yourMove = new Move(0, 0);
+    int num = 0;
+
+    if (b->hasMoves(side))
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                *yourMove = Move(i, j);
+                if (b->checkMove(yourMove, side))
+                {
+                    v_moves.push_back(new Move(i, j));
+                    v_scores.push_back(scoring_sys[i][j]);
+                }
+            }
+        }       
+
+        for (unsigned int k = 1; k < v_moves.size(); k++)
+        {  
+            if (v_scores[k - 1] < v_scores[k])
+            {
+                num = k;
+            }
+        }
+        
+        b->doMove(v_moves[num], side);
+        
+        return v_moves[num];
+    }
+
+    
     return nullptr;
 }
